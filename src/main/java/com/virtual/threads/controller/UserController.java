@@ -59,6 +59,7 @@ public class UserController {
         return registerUser(httpUserRequest);
     }
 
+    /*TODO: Migrate this in another layer of microservices*/
     @PostMapping("/generate")
     public ResponseEntity<HttpUserResponse>generateBcrypt(@RequestBody HttpUserRequest httpUserRequest){
         String rawPassword = httpUserRequest.getPassword();

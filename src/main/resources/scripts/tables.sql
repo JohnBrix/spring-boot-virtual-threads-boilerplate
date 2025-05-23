@@ -13,7 +13,7 @@ CREATE TABLE pos_terminal (
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
-CREATE TABLE product (
+CREATE TABLE products (
     product_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
     price DECIMAL(10,2) NOT NULL,
