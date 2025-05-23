@@ -1,6 +1,6 @@
 package com.virtual.threads.entity;
 
-import com.virtual.threads.model.UserRole;
+import com.virtual.threads.model.Role;
 import jakarta.persistence.*;
 
 /**
@@ -22,7 +22,7 @@ public class User {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    private UserRole userRole; // ADMIN or CASHIER
+    private Role role; // ADMIN or CASHIER
 
     public Long getUserId() {
         return userId;
@@ -48,11 +48,11 @@ public class User {
         this.password = password;
     }
 
-    public UserRole getUserRole() {
-        return userRole;
+    public Role getRole() {
+        return role;
     }
 
-    public void setUserRole(UserRole userRole) {
-        this.userRole = userRole;
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

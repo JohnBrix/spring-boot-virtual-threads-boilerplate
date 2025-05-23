@@ -113,6 +113,20 @@
 			<artifactId>slf4j-api</artifactId>
 		</dependency>
 
+		<!--Spring Authorization server-->
+<!--		<dependency>-->
+<!--			<groupId>org.springframework.security</groupId>-->
+<!--			<artifactId>spring-security-oauth2-authorization-server</artifactId>-->
+<!--			<version>1.5.0</version>-->
+<!--		</dependency>-->
+
+		<!--Bcrypt-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>
