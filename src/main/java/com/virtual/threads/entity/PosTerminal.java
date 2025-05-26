@@ -1,6 +1,10 @@
 package com.virtual.threads.entity;
 
+import com.virtual.threads.model.Location;
+import com.virtual.threads.model.Store;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.util.Set;
@@ -11,6 +15,8 @@ import java.util.Set;
  * @author <John Brix Pomoy>
  * @version $Id: PosTerminal.java, v 0.1 2025-05-23 12:46 AM John Brix Pomoy Exp $$
  */
+@Getter
+@Setter
 @ToString
 @Entity
 @Table(name = "pos_terminal")
@@ -18,10 +24,11 @@ public class PosTerminal {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long terminalId;
+    private Long id;
 
-    private String name;
-    private String location;
+    @Enumerated(EnumType.STRING)
+    private Store storeName;
+    private Location location;
 
 //    @ManyToMany
 //    @JoinTable(
@@ -31,39 +38,4 @@ public class PosTerminal {
 //    )
 //    private Set<Product> products;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User managedBy; // Admin who manages the terminal
-
-    public Long getTerminalId() {
-        return terminalId;
-    }
-
-    public void setTerminalId(Long terminalId) {
-        this.terminalId = terminalId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public User getManagedBy() {
-        return managedBy;
-    }
-
-    public void setManagedBy(User managedBy) {
-        this.managedBy = managedBy;
-    }
 }

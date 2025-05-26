@@ -41,7 +41,8 @@ public class ProductController {
 
 
     @PostMapping("/{adminId}/add-product")
-    public ResponseEntity<HttpProductResponse> createProduct(@PathVariable Long adminId, @RequestBody HttpProductRequest httpProductRequest) {
+    public ResponseEntity<HttpProductResponse> createProduct(@PathVariable Long adminId,
+                                                             @RequestBody HttpProductRequest httpProductRequest) {
 
         //Validate http request
         if(!validateRequest(httpProductRequestMapper.buildHttpRequest(httpProductRequest,adminId))){

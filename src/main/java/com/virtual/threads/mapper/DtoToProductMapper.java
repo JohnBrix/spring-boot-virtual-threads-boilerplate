@@ -3,6 +3,7 @@ package com.virtual.threads.mapper;
 import com.virtual.threads.entity.Product;
 import com.virtual.threads.model.HttpProductRequest;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 /**
  * package com.virtual.threads.mapper; /**

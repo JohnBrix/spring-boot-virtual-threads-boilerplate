@@ -1,7 +1,13 @@
 package com.virtual.threads.entity;
 
 import com.virtual.threads.model.Role;
+import com.virtual.threads.model.Status;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+
+import java.time.LocalDateTime;
 
 /**
  * package com.virtual.threads.entity; /**
@@ -9,50 +15,24 @@ import jakarta.persistence.*;
  * @author <John Brix Pomoy>
  * @version $Id: User.java, v 0.1 2025-05-23 1:04 AM John Brix Pomoy Exp $$
  */
+@Getter
+@Setter
 @Entity
-@Table(name = "users")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private Long id;
 
     @Column(unique = true, nullable = false)
     private String username;
+
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    private Status status; //Active or Inactive
 
     @Enumerated(EnumType.STRING)
     private Role role; // ADMIN or CASHIER
 
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
 }

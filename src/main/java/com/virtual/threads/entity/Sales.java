@@ -1,9 +1,9 @@
 package com.virtual.threads.entity;
 
+import com.virtual.threads.model.PaymentMethod;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
@@ -12,30 +12,25 @@ import java.time.LocalDateTime;
  * package com.virtual.threads.entity; /**
  *
  * @author <John Brix Pomoy>
- * @version $Id: Product.java, v 0.1 2025-05-23 12:39 AM John Brix Pomoy Exp $$
+ * @version $Id: Sales.java, v 0.1 2025-05-26 2:59 PM John Brix Pomoy Exp $$
  */
 @Getter
 @Setter
-@ToString
-@Table(name = "products",
-        indexes = {
-                @Index(name = "idx_created_at", columnList = "createdAt")
-        })
 @Entity
-public class Product {
+public class Sales {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(unique = true, nullable = false)
-    private String name;
-    private Double price;
 
-    @ManyToOne
-    private PosTerminal posTerminal;
+    @Column(unique = true, nullable = false)
+    private String invoiceNumber;
+
+    private Double totalAmount;
+
+    @Enumerated(EnumType.STRING)
+    private PaymentMethod paymentMethod;
 
     @CreatedDate
     private LocalDateTime createdAt;
-
-
 }

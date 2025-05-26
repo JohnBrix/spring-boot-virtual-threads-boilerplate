@@ -23,6 +23,8 @@ public class PosTerminalProductId {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof PosTerminalProductId)) return false;
+
+        //Will create terminal_id_product_id and terminal_id_terminal_id
         PosTerminalProductId that = (PosTerminalProductId) o;
         return Objects.equals(terminal, that.terminal) &&
                 Objects.equals(product, that.product);

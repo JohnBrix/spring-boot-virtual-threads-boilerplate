@@ -8,7 +8,6 @@ import com.virtual.threads.service.ProductService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 /**
@@ -24,16 +23,18 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private UserRepository userRepository;
 
+
     @Autowired
     private ProductRepository productRepository;
 
     @Transactional
     @Override
     public synchronized void addProduct(Product product, Long adminId){
+
         //findByAdminId
         User admin = findByAdminId(adminId);
-        product.setAddedBy(admin);
-        productRepository.save(product);
+        //product.setUserId(admin);
+        productRepository.save(product); //insert to PRODUCT TBL
 
     }
 

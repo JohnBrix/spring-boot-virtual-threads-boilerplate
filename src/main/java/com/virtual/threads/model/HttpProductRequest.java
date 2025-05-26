@@ -16,4 +16,11 @@ public class HttpProductRequest {
     private String name;
     private Double price;
     private Integer stock;
+
+    //{
+    //  "productId": 0,
+    //  "name": "",
+    //  "price": 0.0,
+    //  "stock": 0
+    //}
 }
