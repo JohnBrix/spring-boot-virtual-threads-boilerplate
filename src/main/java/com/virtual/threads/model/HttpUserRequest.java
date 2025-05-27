@@ -10,6 +10,7 @@ import lombok.Data;
  */
 @Data
 public class HttpUserRequest {
+
     private String username;
     private String password;
 }

@@ -5,9 +5,6 @@ import com.virtual.threads.model.Status;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
-
-import java.time.LocalDateTime;
 
 /**
  * package com.virtual.threads.entity; /**

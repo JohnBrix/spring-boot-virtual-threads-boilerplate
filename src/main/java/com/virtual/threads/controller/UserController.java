@@ -3,9 +3,7 @@ package com.virtual.threads.controller;
 import com.virtual.threads.entity.User;
 import com.virtual.threads.mapper.DtoToUserMapper;
 import com.virtual.threads.mapper.HttpUserResponseMapper;
-import com.virtual.threads.model.HttpUserRequest;
-import com.virtual.threads.model.HttpUserResponse;
-import com.virtual.threads.model.Role;
+import com.virtual.threads.model.*;
 import com.virtual.threads.repository.UserRepository;
 import com.virtual.threads.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +15,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.virtual.threads.constant.UserConstant.*;
 
@@ -106,7 +109,7 @@ public class UserController {
         }
     }
 
-    public Boolean validateRequest(HttpUserRequest httpUserRequest) {
+    public boolean validateRequest(HttpUserRequest httpUserRequest) {
         log.info(HTTP_REQUEST, httpUserRequest);
 
         return switch (httpUserRequest) {
@@ -115,4 +118,5 @@ public class UserController {
             default -> true;
         };
     }
+
 }

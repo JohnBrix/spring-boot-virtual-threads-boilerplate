@@ -1,8 +1,6 @@
 package com.virtual.threads.service.impl;
 
 import com.virtual.threads.entity.User;
-import com.virtual.threads.model.HttpUserRequest;
-import com.virtual.threads.model.HttpUserResponse;
 import com.virtual.threads.repository.UserRepository;
 import com.virtual.threads.service.UserService;
 import lombok.extern.slf4j.Slf4j;

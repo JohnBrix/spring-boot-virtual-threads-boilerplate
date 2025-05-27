@@ -1,19 +1,19 @@
 package com.virtual.threads.controller;
 
+import com.virtual.threads.advice.ProductException;
 import com.virtual.threads.mapper.DtoToProductMapper;
 import com.virtual.threads.mapper.HttpProductRequestMapper;
 import com.virtual.threads.mapper.HttpProductResponseMapper;
 import com.virtual.threads.model.HttpProductRequest;
 import com.virtual.threads.model.HttpProductResponse;
+import com.virtual.threads.model.Result;
 import com.virtual.threads.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
-
-import static com.virtual.threads.constant.ProductConstant.ERROR;
+import static com.virtual.threads.constant.ProductConstant.RESULT_MESSAGE_FAILED;
 
 /**
  * package com.virtual.threads.controller; /**
@@ -46,41 +46,28 @@ public class ProductController {
 
         //Validate http request
         if(!validateRequest(httpProductRequestMapper.buildHttpRequest(httpProductRequest,adminId))){
-            return ResponseEntity.badRequest()
-                    .build();
+            log.info("bad_request_trigger");
+            //add the result from mapper response
+             throw new ProductException(httpProductResponseMapper.buildBadRequestResponse());
         }
 
 
         return addProduct(adminId, httpProductRequest);
     }
 
-    private Boolean validateRequest(HttpProductRequest httpProductRequest){
+    private boolean validateRequest(HttpProductRequest httpProductRequest){
         return switch (httpProductRequest){
-            case HttpProductRequest request when null == request.getProductId() || 0 == request.getProductId() -> false;
             case HttpProductRequest request when request.getName().isEmpty() -> false;
             case HttpProductRequest request when null == request.getPrice() || request.getPrice() < 0   -> false;
-            case HttpProductRequest request when null == request.getStock() || 0 == request.getStock() -> false;
             default -> true;
         };
     }
 
     private ResponseEntity<HttpProductResponse> addProduct(Long adminId, HttpProductRequest httpProductRequest) {
-        try{
             //Add product
             productService.addProduct(dtoToProductMapper.dtoToProduct(httpProductRequest), adminId);
-
+            //Response Success
             return ResponseEntity.ok(httpProductResponseMapper.buildOkResponse());
-        }catch (IllegalArgumentException i){
-            log.error(ERROR,i);
-            return ResponseEntity.unprocessableEntity()
-                    .build();
-        }
-        catch (Exception e){
-            log.error(ERROR,e);
-
-            return ResponseEntity.internalServerError()
-                    .build();
-        }
     }
 
 }

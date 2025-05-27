@@ -4,8 +4,7 @@ import com.virtual.threads.model.HttpProductResponse;
 import com.virtual.threads.model.Result;
 import org.springframework.stereotype.Component;
 
-import static com.virtual.threads.constant.ProductConstant.RESULT_DESCRIPTION_SUCCESS;
-import static com.virtual.threads.constant.ProductConstant.RESULT_MESSAGE_SUCCESS;
+import static com.virtual.threads.constant.ProductConstant.*;
 
 /**
  * package com.virtual.threads.mapper; /**
@@ -23,6 +22,28 @@ public class HttpProductResponseMapper {
                         .resultCode(0)
                         .resultDescription(RESULT_DESCRIPTION_SUCCESS)
                         .resultMessage(RESULT_MESSAGE_SUCCESS)
+                        .build())
+                .build();
+    }
+
+    public HttpProductResponse buildGenericErrorResponse(){
+            return HttpProductResponse.builder()
+                    .result(Result.builder()
+                            .resulStatus(false)
+                            .resultCode(1)
+                            .resultDescription(RESULT_MESSAGE_FAILED)
+                            .resultMessage(RESULT_MESSAGE_FAILED)
+                            .build())
+                    .build();
+        }
+
+    public HttpProductResponse buildBadRequestResponse(){
+        return HttpProductResponse.builder()
+                .result(Result.builder()
+                        .resulStatus(false)
+                        .resultCode(2)
+                        .resultDescription(RESULT_MESSAGE_BAD_REQUEST)
+                        .resultMessage(RESULT_MESSAGE_BAD_REQUEST)
                         .build())
                 .build();
     }

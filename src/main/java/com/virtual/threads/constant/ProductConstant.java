@@ -8,7 +8,12 @@ package com.virtual.threads.constant;
  */
 public class ProductConstant {
 
+    private ProductConstant(){
+
+    }
     public static final String RESULT_MESSAGE_SUCCESS = "SUCCESS";
+    public static final String RESULT_MESSAGE_FAILED= "FAILED";
+    public static final String RESULT_MESSAGE_BAD_REQUEST= "BAD_REQUEST";
     public static final String RESULT_DESCRIPTION_SUCCESS = "The product has been added successfully.";
     public static final String ERROR = "ERROR: {}";
 }

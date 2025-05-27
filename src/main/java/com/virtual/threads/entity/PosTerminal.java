@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.Set;
-
 /**
  * package com.virtual.threads.entity; /**
  *
@@ -28,6 +26,7 @@ public class PosTerminal {
 
     @Enumerated(EnumType.STRING)
     private Store storeName;
+    @Enumerated(EnumType.STRING)
     private Location location;
 
 //    @ManyToMany

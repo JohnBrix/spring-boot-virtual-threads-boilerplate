@@ -1,8 +1,6 @@
 package com.virtual.threads.service;
 
 import com.virtual.threads.entity.User;
-import com.virtual.threads.model.HttpUserRequest;
-import com.virtual.threads.model.HttpUserResponse;
 
 /**
  * package com.virtual.threads.service; /**

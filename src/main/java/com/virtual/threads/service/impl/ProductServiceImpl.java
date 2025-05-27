@@ -32,8 +32,7 @@ public class ProductServiceImpl implements ProductService {
     public synchronized void addProduct(Product product, Long adminId){
 
         //findByAdminId
-        User admin = findByAdminId(adminId);
-        //product.setUserId(admin);
+        findByAdminId(adminId);
         productRepository.save(product); //insert to PRODUCT TBL
 
     }
@@ -41,6 +40,6 @@ public class ProductServiceImpl implements ProductService {
     private User findByAdminId(Long adminId) {
         return userRepository
                 .findById(adminId)
-                .orElseThrow(() -> new IllegalArgumentException("USER_ID_NOT_FOUND") );
+                .orElseThrow(() -> new IllegalArgumentException("USER_ID_NOT_FOUND"));
     }
 }

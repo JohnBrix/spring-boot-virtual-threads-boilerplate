@@ -11,6 +11,7 @@ import lombok.Data;
  * @version $Id: HttpProductResponse.java, v 0.1 2025-05-23 2:53 AM John Brix Pomoy Exp $$
  */
 
+
 @Data
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)

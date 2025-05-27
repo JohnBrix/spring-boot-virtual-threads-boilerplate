@@ -14,5 +14,6 @@ import lombok.Data;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class HttpUserResponse {
+
     private Result result;
 }
