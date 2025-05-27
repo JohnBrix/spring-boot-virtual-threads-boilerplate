@@ -46,8 +46,6 @@ public class ProductController {
 
         //Validate http request
         if(!validateRequest(httpProductRequestMapper.buildHttpRequest(httpProductRequest,adminId))){
-            log.info("bad_request_trigger");
-            //add the result from mapper response
              throw new ProductException(httpProductResponseMapper.buildBadRequestResponse());
         }
 
