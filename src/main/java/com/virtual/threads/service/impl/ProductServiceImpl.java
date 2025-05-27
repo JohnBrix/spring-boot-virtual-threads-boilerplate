@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import static com.virtual.threads.constant.HandlerConstant.USER_ID_NOT_FOUND;
+
 /**
  * package com.virtual.threads.service.impl; /**
  *
@@ -40,6 +42,6 @@ public class ProductServiceImpl implements ProductService {
     private User findByAdminId(Long adminId) {
         return userRepository
                 .findById(adminId)
-                .orElseThrow(() -> new IllegalArgumentException("USER_ID_NOT_FOUND"));
+                .orElseThrow(() -> new IllegalArgumentException(USER_ID_NOT_FOUND));
     }
 }

@@ -31,7 +31,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ProblemDetail> handleException(Exception exception) {
-        log.error(ERROR,exception.getCause());
+        log.error(ERROR,exception.getMessage());
 
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         problemDetail.setType(URI.create(API_DOCUMENTS_LINK)); //link of api specs for certain response
@@ -48,7 +48,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ProblemDetail> handleIllegalArgumentException(IllegalArgumentException illegalArgumentException) {
-        log.error(ERROR,illegalArgumentException.getCause());
+        log.error(ERROR,illegalArgumentException.getMessage());
 
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.UNPROCESSABLE_ENTITY);
         problemDetail.setType(URI.create(API_DOCUMENTS_LINK)); //link of api specs for certain response
@@ -65,7 +65,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ProductException.class)
     public ResponseEntity<ProblemDetail> handleProductException(ProductException productException) {
-        log.error(ERROR,productException.getCause());
+        log.error(ERROR,productException.getMessage());
 
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         problemDetail.setType(URI.create(API_DOCUMENTS_LINK)); //link of api specs for certain response
