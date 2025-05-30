@@ -33,12 +33,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ProblemDetail> handleException(Exception exception) {
         log.error(ERROR,exception.getMessage());
 
-        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
-        problemDetail.setType(URI.create(API_DOCUMENTS_LINK)); //link of api specs for certain response
-        problemDetail.setTitle(EXCEPTION);
-        problemDetail.setDetail(exception.getMessage());
-        problemDetail.setInstance(UriUtil.path());
+        //Building passing generic response
+        ProblemDetail problemDetail = buildGenericResponse(
+                exception.getMessage(),
+                API_DOCUMENTS_LINK,
+                EXCEPTION,
+                HttpStatus.INTERNAL_SERVER_ERROR);
 
+        //Custom HttpResponse
         problemDetail.setProperties(Map.ofEntries(
                 Map.entry(HTTP_PRODUCT_RESPONSE, httpProductResponseMapper.buildGenericErrorResponse())
         ));
@@ -46,16 +48,18 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(problemDetail, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ProblemDetail> handleIllegalArgumentException(IllegalArgumentException illegalArgumentException) {
-        log.error(ERROR,illegalArgumentException.getMessage());
+        //Building passing generic response
+        ProblemDetail problemDetail = buildGenericResponse(
+                illegalArgumentException.getMessage(),
+                API_DOCUMENTS_LINK,
+                ILLEGAL_ARGUMENT_EXCEPTION,
+                HttpStatus.UNPROCESSABLE_ENTITY);
 
-        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.UNPROCESSABLE_ENTITY);
-        problemDetail.setType(URI.create(API_DOCUMENTS_LINK)); //link of api specs for certain response
-        problemDetail.setTitle(ILLEGAL_ARGUMENT_EXCEPTION);
-        problemDetail.setDetail(illegalArgumentException.getMessage());
-        problemDetail.setInstance(UriUtil.path());
-
+        //Custom HttpResponse
         problemDetail.setProperties(Map.ofEntries(
                 Map.entry(HTTP_PRODUCT_RESPONSE, httpProductResponseMapper.buildGenericErrorResponse())
         ));
@@ -65,20 +69,34 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ProductException.class)
     public ResponseEntity<ProblemDetail> handleProductException(ProductException productException) {
-        log.error(ERROR,productException.getMessage());
+        //Building passing generic response
+        ProblemDetail problemDetail = buildGenericResponse(
+                productException.getMessage(),
+                API_DOCUMENTS_LINK,
+                PRODUCT_EXCEPTION,
+                HttpStatus.BAD_REQUEST);
 
-        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
-        problemDetail.setType(URI.create(API_DOCUMENTS_LINK)); //link of api specs for certain response
-        problemDetail.setTitle(PRODUCT_EXCEPTION);
-        problemDetail.setDetail(productException.getMessage());
-        problemDetail.setInstance(UriUtil.path());
-
+        //Custom HttpResponse
         problemDetail.setProperties(Map.ofEntries(
                 Map.entry(HTTP_PRODUCT_RESPONSE, productException.getProductResponse())
         ));
 
 
         return new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST);
+    }
+
+    private ProblemDetail buildGenericResponse(String errorMessage,
+                                               String apiDocumentsLink,
+                                               String exception,
+                                               HttpStatus httpStatus) {
+        log.error(ERROR,errorMessage);
+
+        ProblemDetail problemDetail = ProblemDetail.forStatus(httpStatus);
+        problemDetail.setType(URI.create(apiDocumentsLink)); //link of api specs for a certain response
+        problemDetail.setTitle(exception);
+        problemDetail.setDetail(errorMessage);
+        problemDetail.setInstance(UriUtil.path());
+        return problemDetail;
     }
 
 
