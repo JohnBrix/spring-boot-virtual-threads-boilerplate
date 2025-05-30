@@ -6,14 +6,11 @@ import com.virtual.threads.mapper.HttpProductRequestMapper;
 import com.virtual.threads.mapper.HttpProductResponseMapper;
 import com.virtual.threads.model.HttpProductRequest;
 import com.virtual.threads.model.HttpProductResponse;
-import com.virtual.threads.model.Result;
 import com.virtual.threads.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import static com.virtual.threads.constant.ProductConstant.RESULT_MESSAGE_FAILED;
 
 /**
  * package com.virtual.threads.controller; /**
@@ -45,27 +42,27 @@ public class ProductController {
                                                              @RequestBody HttpProductRequest httpProductRequest) {
 
         //Validate http request
-        if(!validateRequest(httpProductRequestMapper.buildHttpRequest(httpProductRequest,adminId))){
-             throw new ProductException(httpProductResponseMapper.buildBadRequestResponse());
+        if (!validateRequest(httpProductRequestMapper.buildHttpRequest(httpProductRequest, adminId))) {
+            throw new ProductException(httpProductResponseMapper.buildBadRequestResponse());
         }
 
 
         return addProduct(adminId, httpProductRequest);
     }
 
-    private boolean validateRequest(HttpProductRequest httpProductRequest){
-        return switch (httpProductRequest){
+    private boolean validateRequest(HttpProductRequest httpProductRequest) {
+        return switch (httpProductRequest) {
             case HttpProductRequest request when request.getName().isEmpty() -> false;
-            case HttpProductRequest request when null == request.getPrice() || request.getPrice() < 0   -> false;
+            case HttpProductRequest request when null == request.getPrice() || request.getPrice() < 0 -> false;
             default -> true;
         };
     }
 
     private ResponseEntity<HttpProductResponse> addProduct(Long adminId, HttpProductRequest httpProductRequest) {
-            //Add product
-            productService.addProduct(dtoToProductMapper.dtoToProduct(httpProductRequest), adminId);
-            //Response Success
-            return ResponseEntity.ok(httpProductResponseMapper.buildOkResponse());
+        //Add product
+        productService.addProduct(dtoToProductMapper.dtoToProduct(httpProductRequest), adminId);
+        //Response Success
+        return ResponseEntity.ok(httpProductResponseMapper.buildOkResponse());
     }
 
 }
