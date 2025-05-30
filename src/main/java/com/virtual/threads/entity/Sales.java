@@ -16,6 +16,10 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
+@Table(name = "sales",
+        indexes = {
+                @Index(name = "idx_created_at", columnList = "createdAt")
+        })
 @Entity
 public class Sales {
 

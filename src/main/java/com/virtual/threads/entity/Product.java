@@ -39,6 +39,4 @@ public class Product {
 
     @CreatedDate
     private LocalDateTime createdAt;
-
-
 }
