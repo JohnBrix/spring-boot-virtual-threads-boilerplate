@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static com.virtual.threads.util.UriUtil.validateProductRequest;
+
 /**
  * package com.virtual.threads.controller; /**
  *
@@ -42,20 +44,12 @@ public class ProductController {
                                                              @RequestBody HttpProductRequest httpProductRequest) {
 
         //Validate http request
-        if (!validateRequest(httpProductRequestMapper.buildHttpRequest(httpProductRequest, adminId))) {
+        if (!validateProductRequest(httpProductRequestMapper.buildHttpRequest(httpProductRequest, adminId))) {
             throw new ProductException(httpProductResponseMapper.buildBadRequestResponse());
         }
 
 
         return addProduct(adminId, httpProductRequest);
-    }
-
-    private boolean validateRequest(HttpProductRequest httpProductRequest) {
-        return switch (httpProductRequest) {
-            case HttpProductRequest request when request.getName().isEmpty() -> false;
-            case HttpProductRequest request when null == request.getPrice() || request.getPrice() < 0 -> false;
-            default -> true;
-        };
     }
 
     private ResponseEntity<HttpProductResponse> addProduct(Long adminId, HttpProductRequest httpProductRequest) {

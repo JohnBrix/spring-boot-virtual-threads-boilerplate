@@ -1,10 +1,9 @@
 package com.virtual.threads.controller;
 
-import com.virtual.threads.entity.User;
 import com.virtual.threads.mapper.DtoToUserMapper;
 import com.virtual.threads.mapper.HttpUserResponseMapper;
-import com.virtual.threads.model.*;
-import com.virtual.threads.repository.UserRepository;
+import com.virtual.threads.model.HttpUserRequest;
+import com.virtual.threads.model.HttpUserResponse;
 import com.virtual.threads.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static com.virtual.threads.constant.UserConstant.*;
+import static com.virtual.threads.constant.UserConstant.ERROR;
+import static com.virtual.threads.constant.UserConstant.HTTP_RESPONSE;
+import static com.virtual.threads.util.UriUtil.validateUserRequest;
 
 /**
  * package com.virtual.threads.controller; /**
@@ -43,45 +39,12 @@ public class UserController {
     @Autowired
     private DtoToUserMapper dtoToUserMapper;
 
-    @Autowired
-    private BCryptPasswordEncoder encoder;
-
-    //TODO: Later move this in service, controller should not put a business core layer
-    @Autowired
-    private UserRepository userRepository;
-
-
-    //TODO: SOON TO BE FIX with spring authentication server this is for temporary.
-
     @PostMapping("/create")
     public ResponseEntity<HttpUserResponse> createUser(@RequestBody HttpUserRequest httpUserRequest) {
-
-        if (!validateRequest(httpUserRequest)) {
+        if (!validateUserRequest(httpUserRequest)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return registerUser(httpUserRequest);
-    }
-
-    /*TODO: Migrate this in another layer of microservices*/
-    @PostMapping("/generate")
-    public ResponseEntity<HttpUserResponse>generateBcrypt(@RequestBody HttpUserRequest httpUserRequest){
-        String rawPassword = httpUserRequest.getPassword();
-        String encodedPassword = encoder.encode(rawPassword);
-
-        // Simulate checking password during login
-        boolean isMatch = encoder.matches(rawPassword, encodedPassword);
-
-        if(!isMatch){
-            return ResponseEntity.unprocessableEntity().build();
-        }
-
-        User user = new User();
-        user.setUsername(httpUserRequest.getUsername());
-        user.setPassword(encodedPassword);
-        user.setRole(Role.ADMIN);
-        userRepository.save(user);
-
-        return ResponseEntity.ok(httpUserResponseMapper.buildOkResponse());
     }
 
     private ResponseEntity<HttpUserResponse> registerUser(HttpUserRequest httpUserRequest) {
@@ -108,15 +71,4 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    public boolean validateRequest(HttpUserRequest httpUserRequest) {
-        log.info(HTTP_REQUEST, httpUserRequest);
-
-        return switch (httpUserRequest) {
-            case HttpUserRequest request when request.getUsername().isEmpty() -> false;
-            case HttpUserRequest request when request.getPassword().isEmpty() -> false;
-            default -> true;
-        };
-    }
-
 }

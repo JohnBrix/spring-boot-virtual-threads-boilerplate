@@ -21,13 +21,6 @@ public class PointOfSale {
     @Id
     private Long id;
 
-//    @ManyToMany
-//    @JoinTable(
-//            name = "pos_terminal", // Join table name
-//            joinColumns = @JoinColumn(name = "pos_terminal_id"),
-//            inverseJoinColumns = @JoinColumn(name = "role_id")
-//    )
-
     @ManyToOne
     private PosTerminal posTerminal;
     @ManyToOne
@@ -37,5 +30,4 @@ public class PointOfSale {
 
     @CreatedDate
     private LocalDateTime createdAt;
-
 }

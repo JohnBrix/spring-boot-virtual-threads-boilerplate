@@ -1,5 +1,7 @@
 package com.virtual.threads.util;
 
+import com.virtual.threads.model.HttpProductRequest;
+import com.virtual.threads.model.HttpUserRequest;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -12,7 +14,7 @@ import java.net.URI;
  */
 public class UriUtil {
 
-    private UriUtil(){
+    private UriUtil() {
 
     }
 
@@ -28,4 +30,21 @@ public class UriUtil {
                 .buildAndExpand(uriVariableValues)
                 .toUri();
     }
+
+    public static boolean validateUserRequest(HttpUserRequest httpUserRequest) {
+        return switch (httpUserRequest) {
+            case HttpUserRequest request when request.getUsername().isEmpty() -> false;
+            case HttpUserRequest request when request.getPassword().isEmpty() -> false;
+            default -> true;
+        };
+    }
+
+    public static boolean validateProductRequest(HttpProductRequest httpProductRequest) {
+        return switch (httpProductRequest) {
+            case HttpProductRequest request when request.getName().isEmpty() -> false;
+            case HttpProductRequest request when null == request.getPrice() || request.getPrice() < 0 -> false;
+            default -> true;
+        };
+    }
+
 }

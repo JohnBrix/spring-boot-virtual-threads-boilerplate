@@ -28,13 +28,4 @@ public class PosTerminal {
     private Store storeName;
     @Enumerated(EnumType.STRING)
     private Location location;
-
-//    @ManyToMany
-//    @JoinTable(
-//            name = "pos_terminal_product",
-//            joinColumns = @JoinColumn(name = "terminal_id"),
-//            inverseJoinColumns = @JoinColumn(name = "product_id")
-//    )
-//    private Set<Product> products;
-
 }
