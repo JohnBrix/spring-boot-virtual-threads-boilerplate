@@ -85,6 +85,24 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(KycException.class)
+    public ResponseEntity<ProblemDetail> handleKycException(KycException kycException) {
+        //Building passing generic response
+        ProblemDetail problemDetail = buildGenericResponse(
+                kycException.getMessage(),
+                API_DOCUMENTS_LINK,
+                KYC_EXCEPTION,
+                HttpStatus.UNPROCESSABLE_ENTITY);
+
+        //Custom HttpResponse
+        problemDetail.setProperties(Map.ofEntries(
+                Map.entry(HTTP_KYC_RESPONSE, kycException.getHttpKycResponse())
+        ));
+
+
+        return new ResponseEntity<>(problemDetail, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
     private ProblemDetail buildGenericResponse(String errorMessage,
                                                String apiDocumentsLink,
                                                String exception,
