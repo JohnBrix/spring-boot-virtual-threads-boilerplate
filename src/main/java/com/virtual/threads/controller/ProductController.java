@@ -1,12 +1,19 @@
 package com.virtual.threads.controller;
 
+import com.virtual.threads.adapter.KYCClient;
+import com.virtual.threads.advice.KycException;
 import com.virtual.threads.advice.ProductException;
 import com.virtual.threads.mapper.DtoToProductMapper;
+import com.virtual.threads.mapper.HttpKycResponseMapper;
 import com.virtual.threads.mapper.HttpProductRequestMapper;
 import com.virtual.threads.mapper.HttpProductResponseMapper;
+import com.virtual.threads.model.HttpKycResponse;
 import com.virtual.threads.model.HttpProductRequest;
 import com.virtual.threads.model.HttpProductResponse;
+import com.virtual.threads.model.HttpUserRequest;
 import com.virtual.threads.service.ProductService;
+import com.virtual.threads.util.UriUtil;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -36,26 +43,41 @@ public class ProductController {
     @Autowired
     private HttpProductRequestMapper httpProductRequestMapper;
 
+    @Autowired
+    private KYCClient kycClient;
+
+    @Autowired
+    private HttpKycResponseMapper httpKycResponseMapper;
+
 
     @PostMapping("/{adminId}/add-product")
     public ResponseEntity<HttpProductResponse> createProduct(@PathVariable Long adminId,
                                                              @RequestBody HttpProductRequest httpProductRequest) {
 
         //Validate http request
-        if (!validateRequest(httpProductRequestMapper.buildHttpRequest(httpProductRequest, adminId))) {
-            throw new ProductException(httpProductResponseMapper.buildBadRequestResponse());
+        if (!UriUtil.validateRequest(httpProductRequestMapper.buildHttpRequest(httpProductRequest, adminId))) {
+            throw new ProductException("BAD_REQUEST",httpProductResponseMapper.buildBadRequestResponse());
         }
 
 
         return addProduct(adminId, httpProductRequest);
     }
 
-    private boolean validateRequest(HttpProductRequest httpProductRequest) {
-        return switch (httpProductRequest) {
-            case HttpProductRequest request when request.getName().isEmpty() -> false;
-            case HttpProductRequest request when null == request.getPrice() || request.getPrice() < 0 -> false;
-            default -> true;
-        };
+    @PostMapping("/kyc")
+    public ResponseEntity<HttpKycResponse> getKyc(@RequestBody HttpUserRequest httpUserRequest) {
+
+        log.info("HttpUser {}",httpUserRequest);
+
+        try {
+            //Get KYC egress
+            HttpKycResponse response = kycClient.getKyc(httpUserRequest);
+            log.info("kyc response: {}",response);
+
+            return ResponseEntity.ok(response);
+        }catch (Exception e){
+            log.info(e.getMessage());
+            throw new KycException(e.getMessage(),httpKycResponseMapper.buildGenericErrorResponse());
+        }
     }
 
     private ResponseEntity<HttpProductResponse> addProduct(Long adminId, HttpProductRequest httpProductRequest) {

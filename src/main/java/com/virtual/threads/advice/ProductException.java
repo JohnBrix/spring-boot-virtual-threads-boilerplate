@@ -16,14 +16,14 @@ public class ProductException extends RuntimeException{
     //Transient excluded from Serializable.
     private final transient HttpProductResponse productResponse;
 
-    public ProductException(HttpProductResponse response) {
-        super(getResultMessage(response));
+    public ProductException(String message,HttpProductResponse response) {
+        super(getResultMessage(message));
         this.productResponse = response;
     }
 
-    private static String getResultMessage(HttpProductResponse response) {
-        if (response != null && response.getResult() != null) {
-            return response.getResult().getResultMessage();
+    private static String getResultMessage(String message) {
+        if (message != null) {
+            return message;
         }
         return "Product error occurred";
     }

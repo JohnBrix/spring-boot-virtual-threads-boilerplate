@@ -1,5 +1,6 @@
 package com.virtual.threads.util;
 
+import com.virtual.threads.model.HttpProductRequest;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -28,4 +29,13 @@ public class UriUtil {
                 .buildAndExpand(uriVariableValues)
                 .toUri();
     }
+
+    public static boolean validateRequest(HttpProductRequest httpProductRequest) {
+        return switch (httpProductRequest) {
+            case HttpProductRequest request when request.getName().isEmpty() -> false;
+            case HttpProductRequest request when null == request.getPrice() || request.getPrice() < 0 -> false;
+            default -> true;
+        };
+    }
+
 }
