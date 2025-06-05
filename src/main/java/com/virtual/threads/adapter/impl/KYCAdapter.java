@@ -2,11 +2,8 @@ package com.virtual.threads.adapter.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.virtual.threads.adapter.KYCClient;
-import com.virtual.threads.advice.KycException;
-import com.virtual.threads.mapper.HttpKycResponseMapper;
 import com.virtual.threads.model.HttpKycResponse;
 import com.virtual.threads.model.HttpUserRequest;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
