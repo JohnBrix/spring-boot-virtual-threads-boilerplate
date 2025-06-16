@@ -1,7 +1,6 @@
 package com.virtual.threads.advice;
 
 import com.virtual.threads.model.HttpKycResponse;
-import com.virtual.threads.model.HttpProductResponse;
 import lombok.Getter;
 
 /**
