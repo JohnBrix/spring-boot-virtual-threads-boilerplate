@@ -32,7 +32,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     @Override
     public synchronized void addProduct(Product product, Long adminId){
-
+        log.info("debug: "+product);
         //findByAdminId
         findByAdminId(adminId);
         productRepository.save(product); //insert to PRODUCT TBL
