@@ -42,15 +42,18 @@ public class ProductServiceImplTest {
     public void testAddProduct(){
         long adminId = 1L;
 
+        //Entity Response
         User user = new User();
         user.setRole(Role.ADMIN);
         user.setId(adminId);
         user.setUsername("foo");
         user.setPassword("bar");
 
+        //Mock
         Mockito.when(userRepository.findById(adminId))
                 .thenReturn(Optional.of(user));
 
+        //Entity Product
         Product product = new Product();
         product.setId(1L);
         product.setName("foo");

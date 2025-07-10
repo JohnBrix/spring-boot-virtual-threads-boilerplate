@@ -16,6 +16,7 @@ import com.virtual.threads.util.UriUtil;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,13 +54,15 @@ public class ProductController {
     @PostMapping("/{adminId}/add-product")
     public ResponseEntity<HttpProductResponse> createProduct(@PathVariable Long adminId,
                                                              @RequestBody HttpProductRequest httpProductRequest) {
+        log.info("initial");
 
         //Validate http request
         if (!UriUtil.validateRequest(httpProductRequestMapper.buildHttpRequest(httpProductRequest, adminId))) {
+            log.info("badrequest");
             throw new ProductException("BAD_REQUEST",httpProductResponseMapper.buildBadRequestResponse());
         }
 
-
+    log.info("addproduct");
         return addProduct(adminId, httpProductRequest);
     }
 
@@ -73,7 +76,7 @@ public class ProductController {
             HttpKycResponse response = kycClient.getKyc(httpUserRequest);
             log.info("kyc response: {}",response);
 
-            return ResponseEntity.ok(response);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }catch (Exception e){
             log.info(e.getMessage());
             throw new KycException(e.getMessage(),httpKycResponseMapper.buildGenericErrorResponse());

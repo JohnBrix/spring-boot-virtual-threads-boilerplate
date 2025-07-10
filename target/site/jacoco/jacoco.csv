@@ -1,0 +1,5 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+demo,com.virtual.threads.service.impl,UserServiceImpl,6,7,0,0,2,2,1,2,1,2
+demo,com.virtual.threads.service.impl,ProductServiceImpl,0,35,0,0,0,9,0,5,0,5
+demo,com.virtual.threads.controller,UserController,137,7,11,0,29,2,10,2,4,2
+demo,com.virtual.threads.controller,ProductController,0,82,0,2,0,17,0,6,0,5
