@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 import static com.virtual.threads.constant.HandlerConstant.USER_ID_NOT_FOUND;
 
 /**
@@ -33,10 +35,12 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public synchronized void addProduct(Product product, Long adminId){
         log.info("debug: "+product);
-        //findByAdminId
-        findByAdminId(adminId);
-        productRepository.save(product); //insert to PRODUCT TBL
 
+        //FindByAdmin ID
+        findByAdminId(adminId);
+
+        //Save product
+        productRepository.save(product);
     }
 
     private User findByAdminId(Long adminId) {

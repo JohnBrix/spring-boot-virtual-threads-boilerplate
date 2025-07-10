@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProductController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">demo</a> &gt; <a href="index.source.html" class="el_package">com.virtual.threads.controller</a> &gt; <span class="el_source">ProductController.java</span></div><h1>ProductController.java</h1><pre class="source lang-java linenums">package com.virtual.threads.controller;
+
+import com.virtual.threads.adapter.KYCClient;
+import com.virtual.threads.advice.KycException;
+import com.virtual.threads.advice.ProductException;
+import com.virtual.threads.mapper.DtoToProductMapper;
+import com.virtual.threads.mapper.HttpKycResponseMapper;
+import com.virtual.threads.mapper.HttpProductRequestMapper;
+import com.virtual.threads.mapper.HttpProductResponseMapper;
+import com.virtual.threads.model.HttpKycResponse;
+import com.virtual.threads.model.HttpProductRequest;
+import com.virtual.threads.model.HttpProductResponse;
+import com.virtual.threads.model.HttpUserRequest;
+import com.virtual.threads.service.ProductService;
+import com.virtual.threads.util.UriUtil;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+/**
+ * package com.virtual.threads.controller; /**
+ *
+ * @author &lt;John Brix Pomoy&gt;
+ * @version $Id: ProductController.java, v 0.1 2025-05-23 12:42 AM John Brix Pomoy Exp $$
+ */
+
+<span class="fc" id="L30">@Slf4j</span>
+@RestController
+@RequestMapping(&quot;/api/products/v1&quot;)
+<span class="fc" id="L33">public class ProductController {</span>
+
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private DtoToProductMapper dtoToProductMapper;
+
+    @Autowired
+    private HttpProductResponseMapper httpProductResponseMapper;
+
+    @Autowired
+    private HttpProductRequestMapper httpProductRequestMapper;
+
+    @Autowired
+    private KYCClient kycClient;
+
+    @Autowired
+    private HttpKycResponseMapper httpKycResponseMapper;
+
+
+    @PostMapping(&quot;/{adminId}/add-product&quot;)
+    public ResponseEntity&lt;HttpProductResponse&gt; createProduct(@PathVariable Long adminId,
+                                                             @RequestBody HttpProductRequest httpProductRequest) {
+<span class="fc" id="L57">        log.info(&quot;initial&quot;);</span>
+
+        //Validate http request
+<span class="fc bfc" id="L60" title="All 2 branches covered.">        if (!UriUtil.validateRequest(httpProductRequestMapper.buildHttpRequest(httpProductRequest, adminId))) {</span>
+<span class="fc" id="L61">            log.info(&quot;badrequest&quot;);</span>
+<span class="fc" id="L62">            throw new ProductException(&quot;BAD_REQUEST&quot;,httpProductResponseMapper.buildBadRequestResponse());</span>
+        }
+
+<span class="fc" id="L65">    log.info(&quot;addproduct&quot;);</span>
+<span class="fc" id="L66">        return addProduct(adminId, httpProductRequest);</span>
+    }
+
+    @PostMapping(&quot;/kyc&quot;)
+    public ResponseEntity&lt;HttpKycResponse&gt; getKyc(@RequestBody HttpUserRequest httpUserRequest) {
+
+<span class="fc" id="L72">        log.info(&quot;HttpUser {}&quot;,httpUserRequest);</span>
+
+        try {
+            //Get KYC egress
+<span class="fc" id="L76">            HttpKycResponse response = kycClient.getKyc(httpUserRequest);</span>
+<span class="fc" id="L77">            log.info(&quot;kyc response: {}&quot;,response);</span>
+
+<span class="fc" id="L79">            return new ResponseEntity&lt;&gt;(response, HttpStatus.OK);</span>
+<span class="fc" id="L80">        }catch (Exception e){</span>
+<span class="fc" id="L81">            log.info(e.getMessage());</span>
+<span class="fc" id="L82">            throw new KycException(e.getMessage(),httpKycResponseMapper.buildGenericErrorResponse());</span>
+        }
+    }
+
+    private ResponseEntity&lt;HttpProductResponse&gt; addProduct(Long adminId, HttpProductRequest httpProductRequest) {
+        //Add product
+<span class="fc" id="L88">        productService.addProduct(dtoToProductMapper.dtoToProduct(httpProductRequest), adminId);</span>
+        //Response Success
+<span class="fc" id="L90">        return ResponseEntity.ok(httpProductResponseMapper.buildOkResponse());</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

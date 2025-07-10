@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">demo</a> &gt; <a href="index.source.html" class="el_package">com.virtual.threads.controller</a> &gt; <span class="el_source">UserController.java</span></div><h1>UserController.java</h1><pre class="source lang-java linenums">package com.virtual.threads.controller;
+
+import com.virtual.threads.entity.User;
+import com.virtual.threads.mapper.DtoToUserMapper;
+import com.virtual.threads.mapper.HttpUserResponseMapper;
+import com.virtual.threads.model.*;
+import com.virtual.threads.repository.UserRepository;
+import com.virtual.threads.service.UserService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.virtual.threads.constant.UserConstant.*;
+
+/**
+ * package com.virtual.threads.controller; /**
+ *
+ * @author &lt;John Brix Pomoy&gt;
+ * @version $Id: UserController.java, v 0.1 2025-05-23 1:38 AM John Brix Pomoy Exp $$
+ */
+<span class="fc" id="L32">@Slf4j</span>
+@RestController
+@RequestMapping(&quot;/api/user/v1&quot;)
+<span class="fc" id="L35">public class UserController {</span>
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private HttpUserResponseMapper httpUserResponseMapper;
+
+    @Autowired
+    private DtoToUserMapper dtoToUserMapper;
+
+    @Autowired
+    private BCryptPasswordEncoder encoder;
+
+    //TODO: Later move this in service, controller should not put a business core layer
+    @Autowired
+    private UserRepository userRepository;
+
+
+    //TODO: SOON TO BE FIX with spring authentication server this is for temporary.
+
+    @PostMapping(&quot;/create&quot;)
+    public ResponseEntity&lt;HttpUserResponse&gt; createUser(@RequestBody HttpUserRequest httpUserRequest) {
+
+<span class="nc bnc" id="L59" title="All 2 branches missed.">        if (!validateRequest(httpUserRequest)) {</span>
+<span class="nc" id="L60">            return new ResponseEntity&lt;&gt;(HttpStatus.BAD_REQUEST);</span>
+        }
+<span class="nc" id="L62">        return registerUser(httpUserRequest);</span>
+    }
+
+    /*TODO: Migrate this in another layer of microservices*/
+    @PostMapping(&quot;/generate&quot;)
+    public ResponseEntity&lt;HttpUserResponse&gt;generateBcrypt(@RequestBody HttpUserRequest httpUserRequest){
+<span class="nc" id="L68">        String rawPassword = httpUserRequest.getPassword();</span>
+<span class="nc" id="L69">        String encodedPassword = encoder.encode(rawPassword);</span>
+
+        // Simulate checking password during login
+<span class="nc" id="L72">        boolean isMatch = encoder.matches(rawPassword, encodedPassword);</span>
+
+<span class="nc bnc" id="L74" title="All 2 branches missed.">        if(!isMatch){</span>
+<span class="nc" id="L75">            return ResponseEntity.unprocessableEntity().build();</span>
+        }
+
+<span class="nc" id="L78">        User user = new User();</span>
+<span class="nc" id="L79">        user.setUsername(httpUserRequest.getUsername());</span>
+<span class="nc" id="L80">        user.setPassword(encodedPassword);</span>
+<span class="nc" id="L81">        user.setRole(Role.ADMIN);</span>
+<span class="nc" id="L82">        userRepository.save(user);</span>
+
+<span class="nc" id="L84">        return ResponseEntity.ok(httpUserResponseMapper.buildOkResponse());</span>
+    }
+
+    private ResponseEntity&lt;HttpUserResponse&gt; registerUser(HttpUserRequest httpUserRequest) {
+        try {
+
+            //Register User
+<span class="nc" id="L91">            userService.registerUser(dtoToUserMapper.dtoToUser(httpUserRequest));</span>
+
+            //Build Success Response
+<span class="nc" id="L94">            HttpUserResponse response = httpUserResponseMapper.buildOkResponse();</span>
+<span class="nc" id="L95">            log.debug(HTTP_RESPONSE, response);</span>
+
+            //Success ResponseEntity
+<span class="nc" id="L98">            return new ResponseEntity&lt;&gt;(response, HttpStatus.OK);</span>
+<span class="nc" id="L99">        } catch (IllegalArgumentException i) {</span>
+<span class="nc" id="L100">            log.error(ERROR, i);</span>
+
+            //Failed ResponseEntity
+<span class="nc" id="L103">            return new ResponseEntity&lt;&gt;(HttpStatus.UNPROCESSABLE_ENTITY);</span>
+<span class="nc" id="L104">        } catch (Exception e) {</span>
+<span class="nc" id="L105">            log.error(ERROR, e);</span>
+
+            //Uncheck Exception default handling
+<span class="nc" id="L108">            return new ResponseEntity&lt;&gt;(HttpStatus.INTERNAL_SERVER_ERROR);</span>
+        }
+    }
+
+    public boolean validateRequest(HttpUserRequest httpUserRequest) {
+<span class="nc" id="L113">        log.info(HTTP_REQUEST, httpUserRequest);</span>
+
+<span class="nc bnc" id="L115" title="All 3 branches missed.">        return switch (httpUserRequest) {</span>
+<span class="nc bnc" id="L116" title="All 2 branches missed.">            case HttpUserRequest request when request.getUsername().isEmpty() -&gt; false;</span>
+<span class="nc bnc" id="L117" title="All 2 branches missed.">            case HttpUserRequest request when request.getPassword().isEmpty() -&gt; false;</span>
+<span class="nc" id="L118">            default -&gt; true;</span>
+        };
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
