@@ -14,6 +14,7 @@ import com.virtual.threads.model.HttpProductResponse;
 import com.virtual.threads.model.HttpUserRequest;
 import com.virtual.threads.service.ProductService;
 import com.virtual.threads.util.UriUtil;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
@@ -121,7 +122,8 @@ public class ProductControllerTest {
     }
 
     @Test
-    public void testCreateProduct() throws Exception {
+    @SneakyThrows(Exception.class)
+    public void testCreateProduct() {
         // Arrange
         HttpProductRequest productRequest = buildProductRequest();
 

@@ -1,6 +1,0 @@
-[engine:junit-jupiter]/[class:com.virtual.threads.controller.ProductControllerTest]/[method:testKyc()]
-[engine:junit-jupiter]/[class:com.virtual.threads.controller.ProductControllerTest]/[method:testCreateProduct()]
-[engine:junit-jupiter]/[class:com.virtual.threads.controller.ProductControllerTest]/[method:testCreateProductThenReturnBadRequest()]
-[engine:junit-jupiter]/[class:com.virtual.threads.controller.ProductControllerTest]/[method:testKycThenReturnException()]
-[engine:junit-jupiter]/[class:com.virtual.threads.service.ProductServiceImplTest]/[method:testAddProduct()]
-[engine:junit-jupiter]/[class:com.virtual.threads.service.ProductServiceImplTest]/[method:testAddProductThrowError()]

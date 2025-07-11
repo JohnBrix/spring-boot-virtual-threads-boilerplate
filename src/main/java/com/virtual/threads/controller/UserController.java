@@ -6,6 +6,7 @@ import com.virtual.threads.mapper.HttpUserResponseMapper;
 import com.virtual.threads.model.*;
 import com.virtual.threads.repository.UserRepository;
 import com.virtual.threads.service.UserService;
+import com.virtual.threads.util.UriUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,45 +44,14 @@ public class UserController {
     @Autowired
     private DtoToUserMapper dtoToUserMapper;
 
-    @Autowired
-    private BCryptPasswordEncoder encoder;
-
-    //TODO: Later move this in service, controller should not put a business core layer
-    @Autowired
-    private UserRepository userRepository;
-
-
-    //TODO: SOON TO BE FIX with spring authentication server this is for temporary.
-
     @PostMapping("/create")
     public ResponseEntity<HttpUserResponse> createUser(@RequestBody HttpUserRequest httpUserRequest) {
+        log.info(HTTP_REQUEST,httpUserRequest);
 
-        if (!validateRequest(httpUserRequest)) {
+        if (!UriUtil.validateRequest(httpUserRequest)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return registerUser(httpUserRequest);
-    }
-
-    /*TODO: Migrate this in another layer of microservices*/
-    @PostMapping("/generate")
-    public ResponseEntity<HttpUserResponse>generateBcrypt(@RequestBody HttpUserRequest httpUserRequest){
-        String rawPassword = httpUserRequest.getPassword();
-        String encodedPassword = encoder.encode(rawPassword);
-
-        // Simulate checking password during login
-        boolean isMatch = encoder.matches(rawPassword, encodedPassword);
-
-        if(!isMatch){
-            return ResponseEntity.unprocessableEntity().build();
-        }
-
-        User user = new User();
-        user.setUsername(httpUserRequest.getUsername());
-        user.setPassword(encodedPassword);
-        user.setRole(Role.ADMIN);
-        userRepository.save(user);
-
-        return ResponseEntity.ok(httpUserResponseMapper.buildOkResponse());
     }
 
     private ResponseEntity<HttpUserResponse> registerUser(HttpUserRequest httpUserRequest) {
@@ -92,31 +62,21 @@ public class UserController {
 
             //Build Success Response
             HttpUserResponse response = httpUserResponseMapper.buildOkResponse();
-            log.debug(HTTP_RESPONSE, response);
+            log.info(HTTP_RESPONSE, response);
 
             //Success ResponseEntity
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (IllegalArgumentException i) {
-            log.error(ERROR, i);
+            log.error(ERROR, i.getMessage());
 
             //Failed ResponseEntity
             return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
         } catch (Exception e) {
-            log.error(ERROR, e);
+            log.error(ERROR, e.getMessage());
 
             //Uncheck Exception default handling
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
-
-    public boolean validateRequest(HttpUserRequest httpUserRequest) {
-        log.info(HTTP_REQUEST, httpUserRequest);
-
-        return switch (httpUserRequest) {
-            case HttpUserRequest request when request.getUsername().isEmpty() -> false;
-            case HttpUserRequest request when request.getPassword().isEmpty() -> false;
-            default -> true;
-        };
     }
 
 }
