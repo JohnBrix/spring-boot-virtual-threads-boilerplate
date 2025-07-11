@@ -13,15 +13,15 @@
               </ColumnState>
               <ColumnState>
                 <option name="name" value="type" />
-                <option name="width" value="356" />
+                <option name="width" value="292" />
               </ColumnState>
               <ColumnState>
                 <option name="name" value="location" />
-                <option name="width" value="356" />
+                <option name="width" value="292" />
               </ColumnState>
               <ColumnState>
                 <option name="name" value="domain" />
-                <option name="width" value="256" />
+                <option name="width" value="192" />
               </ColumnState>
             </list>
           </value>
