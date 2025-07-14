@@ -22,3 +22,4 @@ public class HttpKycResponse {
     private Integer status;
     private Boolean isSuccess;
 }
+

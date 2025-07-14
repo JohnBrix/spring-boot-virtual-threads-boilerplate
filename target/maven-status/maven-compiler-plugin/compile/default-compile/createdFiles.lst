@@ -20,6 +20,8 @@ com/virtual/threads/model/HttpProductRequest$HttpProductRequestBuilder.class
 com/virtual/threads/mapper/HttpKycResponseMapper.class
 com/virtual/threads/model/TransactionType.class
 com/virtual/threads/model/HttpProductRequest.class
+com/virtual/threads/model/KYCResponse.class
+com/virtual/threads/model/KYCResponse$KYCResponseBuilder.class
 com/virtual/threads/config/SecurityConfig.class
 com/virtual/threads/mapper/DtoToUserMapperImpl.class
 com/virtual/threads/MainApplication.class
@@ -57,3 +59,4 @@ com/virtual/threads/advice/KycException.class
 com/virtual/threads/advice/ProductException.class
 com/virtual/threads/constant/ProductConstant.class
 com/virtual/threads/model/HttpUserRequest.class
+com/virtual/threads/constant/KYCConstants.class
