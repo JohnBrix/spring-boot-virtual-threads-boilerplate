@@ -8,6 +8,7 @@
 /Users/johnbrixpomoy/Documents/Github/spring-boot-virtual-threads-boilerplate/src/main/java/com/virtual/threads/config/SecurityConfig.java
 /Users/johnbrixpomoy/Documents/Github/spring-boot-virtual-threads-boilerplate/src/main/java/com/virtual/threads/constant/EndpointConstant.java
 /Users/johnbrixpomoy/Documents/Github/spring-boot-virtual-threads-boilerplate/src/main/java/com/virtual/threads/constant/HandlerConstant.java
+/Users/johnbrixpomoy/Documents/Github/spring-boot-virtual-threads-boilerplate/src/main/java/com/virtual/threads/constant/KYCConstants.java
 /Users/johnbrixpomoy/Documents/Github/spring-boot-virtual-threads-boilerplate/src/main/java/com/virtual/threads/constant/ProductConstant.java
 /Users/johnbrixpomoy/Documents/Github/spring-boot-virtual-threads-boilerplate/src/main/java/com/virtual/threads/constant/UserConstant.java
 /Users/johnbrixpomoy/Documents/Github/spring-boot-virtual-threads-boilerplate/src/main/java/com/virtual/threads/controller/ProductController.java
@@ -34,6 +35,7 @@
 /Users/johnbrixpomoy/Documents/Github/spring-boot-virtual-threads-boilerplate/src/main/java/com/virtual/threads/model/HttpProductResponse.java
 /Users/johnbrixpomoy/Documents/Github/spring-boot-virtual-threads-boilerplate/src/main/java/com/virtual/threads/model/HttpUserRequest.java
 /Users/johnbrixpomoy/Documents/Github/spring-boot-virtual-threads-boilerplate/src/main/java/com/virtual/threads/model/HttpUserResponse.java
+/Users/johnbrixpomoy/Documents/Github/spring-boot-virtual-threads-boilerplate/src/main/java/com/virtual/threads/model/KYCResponse.java
 /Users/johnbrixpomoy/Documents/Github/spring-boot-virtual-threads-boilerplate/src/main/java/com/virtual/threads/model/Location.java
 /Users/johnbrixpomoy/Documents/Github/spring-boot-virtual-threads-boilerplate/src/main/java/com/virtual/threads/model/PaymentMethod.java
 /Users/johnbrixpomoy/Documents/Github/spring-boot-virtual-threads-boilerplate/src/main/java/com/virtual/threads/model/Result.java

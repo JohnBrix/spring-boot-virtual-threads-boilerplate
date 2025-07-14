@@ -1,5 +1,8 @@
 package com.virtual.threads.model;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.ToString;
 
@@ -12,6 +15,11 @@ import lombok.ToString;
 @Data
 public class HttpUserRequest {
 
+    @NotBlank(message = "Username is required")
+    @NotEmpty(message = "Username is required")
     private String username;
+
+    @NotBlank(message = "Password is required")
+    @NotEmpty(message = "Password is required")
     private String password;
 }

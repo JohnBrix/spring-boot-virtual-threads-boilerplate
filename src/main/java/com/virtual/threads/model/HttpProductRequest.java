@@ -1,5 +1,6 @@
 package com.virtual.threads.model;
 
+import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Data;
 
@@ -13,10 +14,23 @@ import lombok.Data;
 @Builder
 public class HttpProductRequest {
 
+    @NotNull(message = "ProductId cannot be null")
     private Long productId;
+
+    @NotNull(message = "UserId cannot be null")
     private Long userId;
+
+    @NotNull(message = "PosTerminalId cannot be null")
     private Long posTerminalId;
+
+    @NotBlank(message = "Name is required")
+    @Size(min = 2, message = "Name must be at least 2 letters")
     private String name;
+
+    @NotNull(message = "Price is required")
+    @DecimalMin(value = "1.0", message = "Price must be at least 1.0")
     private Double price;
+
+    @Min(value = 1, message = "Stock must be at least 1")
     private Integer stock;
 }

@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProductServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">demo</a> &gt; <a href="index.source.html" class="el_package">com.virtual.threads.service.impl</a> &gt; <span class="el_source">ProductServiceImpl.java</span></div><h1>ProductServiceImpl.java</h1><pre class="source lang-java linenums">package com.virtual.threads.service.impl;
 
+import com.virtual.threads.advice.ProductException;
 import com.virtual.threads.entity.Product;
-import com.virtual.threads.entity.User;
+import com.virtual.threads.mapper.DtoToProductMapper;
+import com.virtual.threads.mapper.HttpProductResponseMapper;
+import com.virtual.threads.model.HttpProductRequest;
+import com.virtual.threads.model.HttpProductResponse;
 import com.virtual.threads.repository.ProductRepository;
 import com.virtual.threads.repository.UserRepository;
 import com.virtual.threads.service.ProductService;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
+import org.springframework.validation.BindingResult;
 
 import static com.virtual.threads.constant.HandlerConstant.USER_ID_NOT_FOUND;
+import static com.virtual.threads.constant.ProductConstant.*;
 
 /**
  * package com.virtual.threads.service.impl; /**
@@ -20,33 +25,68 @@ import static com.virtual.threads.constant.HandlerConstant.USER_ID_NOT_FOUND;
  * @author &lt;John Brix Pomoy&gt;
  * @version $Id: ProductServiceImpl.java, v 0.1 2025-05-23 2:54 AM John Brix Pomoy Exp $$
  */
-<span class="fc" id="L23">@Slf4j</span>
+<span class="fc" id="L28">@Slf4j</span>
 @Service
-<span class="fc" id="L25">public class ProductServiceImpl implements ProductService {</span>
+<span class="fc" id="L30">public class ProductServiceImpl implements ProductService {</span>
 
     @Autowired
     private UserRepository userRepository;
 
-
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private DtoToProductMapper dtoToProductMapper;
+
+    @Autowired
+    private HttpProductResponseMapper httpProductResponseMapper;
+
+
+    //Why Synchronized? I ensure if adding the product during process 1 thread a time,
+    //they need to finish it before they allowed to call add product
     @Transactional
     @Override
-    public synchronized void addProduct(Product product, Long adminId){
-<span class="fc" id="L37">        log.info(&quot;debug: &quot;+product);</span>
+    public synchronized HttpProductResponse addProduct(@Valid HttpProductRequest httpProductRequest,
+                                                       Long adminId,
+                                                       BindingResult bindingResult){
 
-        //FindByAdmin ID
-<span class="fc" id="L40">        findByAdminId(adminId);</span>
+        //Validate Http Request
+<span class="fc" id="L54">        validateProductRequest(bindingResult);</span>
+
+        //Dto to Entity Mapper
+<span class="fc" id="L57">        Product product = dtoToProductMapper.dtoToProduct(httpProductRequest);</span>
+<span class="fc" id="L58">        log.info(PRODUCT_REQUEST,product);</span>
+
+        //Find By Admin ID and throw if USER_ID_NOT_FOUND
+<span class="fc" id="L61">        findByAdminId(adminId);</span>
 
         //Save product
-<span class="fc" id="L43">        productRepository.save(product);</span>
-<span class="fc" id="L44">    }</span>
+<span class="fc" id="L64">        saveProduct(product);</span>
 
-    private User findByAdminId(Long adminId) {
-<span class="fc" id="L47">        return userRepository</span>
-<span class="fc" id="L48">                .findById(adminId)</span>
-<span class="fc" id="L49">                .orElseThrow(() -&gt; new IllegalArgumentException(USER_ID_NOT_FOUND));</span>
+        //Build HttpOkResponse
+<span class="fc" id="L67">        return httpProductResponseMapper.buildOkResponse();</span>
     }
+
+    private void validateProductRequest(BindingResult bindingResult){
+<span class="pc bpc" id="L71" title="1 of 2 branches missed.">        if (bindingResult.hasErrors()) {</span>
+<span class="nc" id="L72">            bindingResult.getFieldErrors().forEach(error -&gt;</span>
+<span class="nc" id="L73">                    log.error(VALIDATION_ERROR_ON_FIELD, error.getField(), error.getDefaultMessage())</span>
+            );
+
+<span class="nc" id="L76">            throw new ProductException(BAD_REQUEST, httpProductResponseMapper.buildBadRequestResponse());</span>
+        }
+<span class="fc" id="L78">    }</span>
+
+    private void findByAdminId(Long adminId) {
+<span class="fc" id="L81">        userRepository</span>
+<span class="fc" id="L82">                .findById(adminId)</span>
+<span class="fc" id="L83">                .orElseThrow(() -&gt; new IllegalArgumentException(USER_ID_NOT_FOUND));</span>
+<span class="fc" id="L84">    }</span>
+
+    private void saveProduct(Product product){
+<span class="fc" id="L87">        productRepository.save(product);</span>
+<span class="fc" id="L88">    }</span>
+
+
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

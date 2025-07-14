@@ -48,9 +48,9 @@ public class UserController {
     public ResponseEntity<HttpUserResponse> createUser(@RequestBody HttpUserRequest httpUserRequest) {
         log.info(HTTP_REQUEST,httpUserRequest);
 
-        if (!UriUtil.validateRequest(httpUserRequest)) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+//        if (!UriUtil.validateRequest(httpUserRequest)) {
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
         return registerUser(httpUserRequest);
     }
 

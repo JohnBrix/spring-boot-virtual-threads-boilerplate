@@ -3,32 +3,24 @@ package com.virtual.threads.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.virtual.threads.adapter.KYCClient;
 import com.virtual.threads.advice.KycException;
-import com.virtual.threads.entity.Product;
-import com.virtual.threads.mapper.DtoToProductMapper;
 import com.virtual.threads.mapper.HttpKycResponseMapper;
-import com.virtual.threads.mapper.HttpProductRequestMapper;
-import com.virtual.threads.mapper.HttpProductResponseMapper;
-import com.virtual.threads.model.HttpKycResponse;
-import com.virtual.threads.model.HttpProductRequest;
-import com.virtual.threads.model.HttpProductResponse;
-import com.virtual.threads.model.HttpUserRequest;
+import com.virtual.threads.model.*;
 import com.virtual.threads.service.ProductService;
-import com.virtual.threads.util.UriUtil;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.validation.BindingResult;
 
+import static com.virtual.threads.constant.ProductConstant.RESULT_DESCRIPTION_SUCCESS;
+import static com.virtual.threads.constant.ProductConstant.RESULT_MESSAGE_SUCCESS;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -47,15 +39,6 @@ public class ProductControllerTest {
 
     @MockitoBean
     private ProductService productService;
-
-    @MockitoBean
-    private DtoToProductMapper dtoToProductMapper;
-
-    @MockitoBean
-    private HttpProductResponseMapper httpProductResponseMapper;
-
-    @MockitoBean
-    private HttpProductRequestMapper httpProductRequestMapper;
 
     @MockitoBean
     private KYCClient kycClient;
@@ -77,7 +60,7 @@ public class ProductControllerTest {
         HttpKycResponse httpKycResponse = buildKycResponse();
 
         //Mock
-        when(kycClient.getKyc(any())).thenReturn(httpKycResponse);
+        when(kycClient.getKyc(any(), any(BindingResult.class))).thenReturn(httpKycResponse);
 
         //Calling endpoint and AssertEquals to 200
         mockMvc.perform(post(BASED_ENDPOINT + "/kyc")
@@ -95,7 +78,7 @@ public class ProductControllerTest {
         HttpKycResponse httpKycResponse = buildKycResponse();
 
         //Mock
-        when(kycClient.getKyc(userRequest)).thenThrow(new KycException("UPSTREAM_ERROR",httpKycResponse));
+        when(kycClient.getKyc(eq(userRequest), any(BindingResult.class))).thenThrow(new KycException("UPSTREAM_ERROR", httpKycResponse));
         when(httpKycResponseMapper.buildGenericErrorResponse()).thenReturn(httpKycResponse);
 
         //Calling endpoint and AssertEquals to 200
@@ -127,50 +110,49 @@ public class ProductControllerTest {
         // Arrange
         HttpProductRequest productRequest = buildProductRequest();
 
-        // Mock service
-        doNothing().when(productService).addProduct(any(Product.class), eq(1L));
+        //Mock service
+        when(productService.addProduct(eq(productRequest),eq(1L),any(BindingResult.class))).thenReturn(buildOkResponse());
 
-        // Mock static method
-        try (MockedStatic<UriUtil> mockedStatic = Mockito.mockStatic(UriUtil.class)) {
-
-            mockedStatic.when(() -> UriUtil.validateRequest(httpProductRequestMapper.buildHttpRequest(productRequest, 1L)))
-                    .thenReturn(true);
-
-            // Act & Assert
+        //Assert
             mockMvc.perform(post(BASED_ENDPOINT + "/1/add-product")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(productRequest)))
                     .andExpect(status().isOk());
-        }
     }
 
-    @Test
-    public void testCreateProductThenReturnBadRequest() throws Exception {
-        // Arrange
-        HttpProductRequest productRequest = buildProductRequest();
-
-        //Inline mock for static method
-        try (MockedStatic<UriUtil> mockStatic = Mockito.mockStatic(UriUtil.class)) {
-            mockStatic.when(() -> UriUtil.validateRequest(httpProductRequestMapper.buildHttpRequest(productRequest,1L))).thenReturn(false);
-
-            when(httpProductResponseMapper.buildBadRequestResponse()).thenReturn(HttpProductResponse.builder().build());
-
-            // Act & Assert
-            mockMvc.perform(post(BASED_ENDPOINT+"/1/add-product") // Adjust endpoint if needed
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(new ObjectMapper().writeValueAsString(productRequest)))
-                    .andExpect(status().isBadRequest());
-        }
-    }
+    // @TODO E.G of mockito inline static method.
+    ////        try (MockedStatic<UriUtil> mockedStatic = Mockito.mockStatic(UriUtil.class)) {
+    ////
+    ////            mockedStatic.when(() -> UriUtil.validateRequest(httpProductRequestMapper.buildHttpRequest(productRequest, 1L)))
+    ////                    .thenReturn(true);
+    ////
+    ////            // Act & Assert
+    ////            mockMvc.perform(post(BASED_ENDPOINT + "/1/add-product")
+    ////                            .contentType(MediaType.APPLICATION_JSON)
+    ////                            .content(objectMapper.writeValueAsString(productRequest)))
+    ////                    .andExpect(status().isOk());
+    ////        }
 
 
-    public HttpProductRequest buildProductRequest(){
-       return HttpProductRequest.builder()
+
+    public HttpProductRequest buildProductRequest() {
+        return HttpProductRequest.builder()
                 .userId(1L)
                 .productId(1L)
                 .name("foo")
                 .stock(1)
                 .price(120.2)
+                .build();
+    }
+
+    public HttpProductResponse buildOkResponse(){
+        return HttpProductResponse.builder()
+                .result(Result.builder()
+                        .resulStatus(true)
+                        .resultCode(0)
+                        .resultDescription(RESULT_DESCRIPTION_SUCCESS)
+                        .resultMessage(RESULT_MESSAGE_SUCCESS)
+                        .build())
                 .build();
     }
 
