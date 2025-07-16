@@ -37,6 +37,17 @@ public class HttpProductResponseMapper {
                     .build();
         }
 
+    public HttpProductResponse buildUnprocessableEntity(){
+        return HttpProductResponse.builder()
+                .result(Result.builder()
+                        .resulStatus(false)
+                        .resultCode(2)
+                        .resultDescription(UNPROCESSABLE_ENTITY)
+                        .resultMessage(UNPROCESSABLE_ENTITY)
+                        .build())
+                .build();
+    }
+
     public HttpProductResponse buildBadRequestResponse(){
         return HttpProductResponse.builder()
                 .result(Result.builder()

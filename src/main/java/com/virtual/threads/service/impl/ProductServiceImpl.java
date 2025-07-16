@@ -15,7 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 
+import static com.virtual.threads.constant.HandlerConstant.API_DOCUMENTS_LINK;
 import static com.virtual.threads.constant.HandlerConstant.USER_ID_NOT_FOUND;
 import static com.virtual.threads.constant.ProductConstant.*;
 
@@ -46,7 +48,7 @@ public class ProductServiceImpl implements ProductService {
     //they need to finish it before they allowed to call add product
     @Transactional
     @Override
-    public synchronized HttpProductResponse addProduct(@Valid HttpProductRequest httpProductRequest,
+    public synchronized HttpProductResponse addProduct(HttpProductRequest httpProductRequest,
                                                        Long adminId,
                                                        BindingResult bindingResult){
 
@@ -69,11 +71,11 @@ public class ProductServiceImpl implements ProductService {
 
     private void validateProductRequest(BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
-            bindingResult.getFieldErrors().forEach(error ->
-                    log.error(VALIDATION_ERROR_ON_FIELD, error.getField(), error.getDefaultMessage())
-            );
-
-            throw new ProductException(BAD_REQUEST, httpProductResponseMapper.buildBadRequestResponse());
+            switch (bindingResult.getFieldErrors().getFirst().getField()){
+                case "name" -> throw new ProductException("Name is required or Name must be at least 2 letters", httpProductResponseMapper.buildUnprocessableEntity(), API_DOCUMENTS_LINK, UNPROCESSABLE_ENTITY_CODE);
+                case "userId" -> throw new ProductException("UserId cannot be null", httpProductResponseMapper.buildBadRequestResponse(), API_DOCUMENTS_LINK, BAD_REQUEST_CODE);
+                default -> throw new ProductException(BAD_REQUEST, httpProductResponseMapper.buildBadRequestResponse(), API_DOCUMENTS_LINK, BAD_REQUEST_CODE);
+            }
         }
     }
 
