@@ -15,10 +15,14 @@ public class ProductException extends RuntimeException{
 
     //Transient excluded from Serializable.
     private final transient HttpProductResponse productResponse;
+    private final String apiDocsLink;
+    private final Integer statusCode;
 
-    public ProductException(String message,HttpProductResponse response) {
+    public ProductException(String message,HttpProductResponse response,String apiDocsLink, Integer statusCode) {
         super(getResultMessage(message));
         this.productResponse = response;
+        this.apiDocsLink = apiDocsLink;
+        this.statusCode  = statusCode;
     }
 
     private static String getResultMessage(String message) {

@@ -1,6 +1,5 @@
 package com.virtual.threads.service;
 
-import com.virtual.threads.entity.Product;
 import com.virtual.threads.model.HttpProductRequest;
 import com.virtual.threads.model.HttpProductResponse;
 import org.springframework.validation.BindingResult;

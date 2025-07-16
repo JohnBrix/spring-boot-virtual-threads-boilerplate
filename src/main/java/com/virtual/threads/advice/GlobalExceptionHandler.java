@@ -74,9 +74,9 @@ public class GlobalExceptionHandler {
         //Building passing generic response
         ProblemDetail problemDetail = buildGenericResponse(
                 productException.getMessage(),
-                API_DOCUMENTS_LINK,
+                productException.getApiDocsLink(),
                 PRODUCT_EXCEPTION,
-                HttpStatus.BAD_REQUEST);
+                HttpStatus.valueOf(productException.getStatusCode()));
 
         //Custom HttpResponse
         problemDetail.setProperties(Map.ofEntries(
@@ -84,7 +84,7 @@ public class GlobalExceptionHandler {
         ));
 
 
-        return new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(problemDetail, HttpStatus.valueOf(productException.getStatusCode()));
     }
 
     @ExceptionHandler(KycException.class)

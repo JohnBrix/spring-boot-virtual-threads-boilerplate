@@ -7,12 +7,15 @@ import com.virtual.threads.model.HttpProductRequest;
 import com.virtual.threads.model.HttpProductResponse;
 import com.virtual.threads.model.HttpUserRequest;
 import com.virtual.threads.service.ProductService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 import static com.virtual.threads.constant.KYCConstants.HTTP_KYC_RESPONSE;
 import static com.virtual.threads.constant.KYCConstants.HTTP_USER_REQUEST;
@@ -43,21 +46,26 @@ public class ProductController {
 
 
     @PostMapping("/{adminId}/add-product")
-    public ResponseEntity<HttpProductResponse> createProduct(@PathVariable Long adminId,
-                                                             @RequestBody HttpProductRequest httpProductRequest, BindingResult bindingResult) {
-        log.info(HTTP_PRODUCT_REQUEST, httpProductRequest);
+    public ResponseEntity<HttpProductResponse> createProduct(
+            @Valid @RequestBody HttpProductRequest httpProductRequest,
+            BindingResult bindingResult,
+            @PathVariable Long adminId) {
 
-        return addProduct(adminId, httpProductRequest, bindingResult);
+        String generateUUID = String.valueOf(UUID.randomUUID());
+
+        log.info(HTTP_PRODUCT_REQUEST,generateUUID, httpProductRequest);
+
+        return addProduct(adminId, httpProductRequest, bindingResult,generateUUID);
     }
 
     private ResponseEntity<HttpProductResponse> addProduct(Long adminId,
                                                            HttpProductRequest httpProductRequest,
-                                                           BindingResult bindingResult) {
+                                                           BindingResult bindingResult, String generateUUID) {
 
         //Add product
         HttpProductResponse httpProductResponse = productService.addProduct(httpProductRequest, adminId, bindingResult);
 
-        log.info(HTTP_PRODUCT_RESPONSE, httpProductResponse);
+        log.info(HTTP_PRODUCT_RESPONSE, generateUUID,httpProductResponse);
 
         //Response Success
         return ResponseEntity.ok(httpProductResponse);
