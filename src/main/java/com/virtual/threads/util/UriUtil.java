@@ -1,12 +1,8 @@
 package com.virtual.threads.util;
 
-import com.virtual.threads.model.HttpProductRequest;
-import com.virtual.threads.model.HttpUserRequest;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-
-import static com.virtual.threads.constant.UserConstant.HTTP_REQUEST;
 
 /**
  * package com.virtual.threads.util; /**
@@ -16,7 +12,7 @@ import static com.virtual.threads.constant.UserConstant.HTTP_REQUEST;
  */
 public class UriUtil {
 
-    private UriUtil(){
+    private UriUtil() {
 
     }
 

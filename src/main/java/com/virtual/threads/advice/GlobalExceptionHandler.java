@@ -105,25 +105,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(problemDetail, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
-//    @ExceptionHandler(MethodArgumentNotValidException.class)
-//    public ResponseEntity<ProblemDetail> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-//
-//        //Building passing generic response
-//        ProblemDetail problemDetail = buildGenericResponse(
-//                ex.getMessage(),
-//                API_DOCUMENTS_LINK,
-//                PRODUCT_EXCEPTION,
-//                HttpStatus.BAD_REQUEST);
-//
-//        //Custom HttpResponse
-//        problemDetail.setProperties(Map.ofEntries(
-//                Map.entry(HTTP_PRODUCT_RESPONSE, ex.getBody())
-//        ));
-//
-//
-//        return new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST);
-//    }
-
     private ProblemDetail buildGenericResponse(String errorMessage,
                                                String apiDocumentsLink,
                                                String exception,

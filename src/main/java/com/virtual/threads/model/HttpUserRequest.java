@@ -2,9 +2,7 @@ package com.virtual.threads.model;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
-import lombok.ToString;
 
 /**
  * package com.virtual.threads.model; /**
