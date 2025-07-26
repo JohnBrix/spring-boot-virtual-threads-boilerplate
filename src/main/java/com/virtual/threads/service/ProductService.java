@@ -1,6 +1,8 @@
 package com.virtual.threads.service;
 
-import com.virtual.threads.entity.Product;
+import com.virtual.threads.model.HttpProductRequest;
+import com.virtual.threads.model.HttpProductResponse;
+import org.springframework.validation.BindingResult;
 
 /**
  * package com.virtual.threads.service; /**
@@ -9,5 +11,5 @@ import com.virtual.threads.entity.Product;
  * @version $Id: ProductService.java, v 0.1 2025-05-23 2:55 AM John Brix Pomoy Exp $$
  */
 public interface ProductService {
-    void addProduct(Product user, Long adminId);
+    HttpProductResponse addProduct(HttpProductRequest httpProductRequest, Long adminId, BindingResult bindingResult);
 }

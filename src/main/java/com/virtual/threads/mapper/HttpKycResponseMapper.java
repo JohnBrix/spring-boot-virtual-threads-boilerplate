@@ -1,6 +1,7 @@
 package com.virtual.threads.mapper;
 
 import com.virtual.threads.model.HttpKycResponse;
+import com.virtual.threads.model.KYCResponse;
 import org.springframework.stereotype.Component;
 
 /**
@@ -21,4 +22,25 @@ public class HttpKycResponseMapper {
                 .status(1)
                 .build();
     }
+
+    public HttpKycResponse buildInternalServerError(){
+
+        return HttpKycResponse.builder()
+                .description("500")
+                .isSuccess(false)
+                .message("INTERNAL_SERVER_ERROR")
+                .status(1)
+                .build();
+    }
+
+    public HttpKycResponse buildOkResponse(KYCResponse kycResponse){
+        return HttpKycResponse.builder()
+                .description(kycResponse.getDescription())
+                .isSuccess(kycResponse.getIsSuccess())
+                .message(kycResponse.getMessage())
+                .status(kycResponse.getStatus())
+                .build();
+    }
+
+
 }

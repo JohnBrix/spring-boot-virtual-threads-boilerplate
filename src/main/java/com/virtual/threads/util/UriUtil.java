@@ -1,9 +1,12 @@
 package com.virtual.threads.util;
 
 import com.virtual.threads.model.HttpProductRequest;
+import com.virtual.threads.model.HttpUserRequest;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+
+import static com.virtual.threads.constant.UserConstant.HTTP_REQUEST;
 
 /**
  * package com.virtual.threads.util; /**
@@ -28,14 +31,6 @@ public class UriUtil {
                 .path(path)
                 .buildAndExpand(uriVariableValues)
                 .toUri();
-    }
-
-    public static boolean validateRequest(HttpProductRequest httpProductRequest) {
-        return switch (httpProductRequest) {
-            case HttpProductRequest request when request.getName().isEmpty() -> false;
-            case HttpProductRequest request when null == request.getPrice() || request.getPrice() < 0 -> false;
-            default -> true;
-        };
     }
 
 }

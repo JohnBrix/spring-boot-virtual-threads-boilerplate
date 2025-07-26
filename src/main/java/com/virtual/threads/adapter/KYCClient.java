@@ -3,6 +3,7 @@ package com.virtual.threads.adapter;
 import com.virtual.threads.advice.KycException;
 import com.virtual.threads.model.HttpKycResponse;
 import com.virtual.threads.model.HttpUserRequest;
+import org.springframework.validation.BindingResult;
 
 /**
  * package com.virtual.threads.adapter; /**
@@ -11,5 +12,5 @@ import com.virtual.threads.model.HttpUserRequest;
  * @version $Id: WiremockService.java, v 0.1 2025-06-04 8:59 PM John Brix Pomoy Exp $$
  */
 public interface KYCClient {
-    HttpKycResponse getKyc(HttpUserRequest httpUserRequest)throws KycException;
+    HttpKycResponse getKyc(HttpUserRequest httpUserRequest, BindingResult bindingResult)throws KycException;
 }

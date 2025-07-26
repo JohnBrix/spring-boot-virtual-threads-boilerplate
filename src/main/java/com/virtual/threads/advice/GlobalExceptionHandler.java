@@ -7,10 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 
 import static com.virtual.threads.constant.HandlerConstant.*;
@@ -72,9 +74,9 @@ public class GlobalExceptionHandler {
         //Building passing generic response
         ProblemDetail problemDetail = buildGenericResponse(
                 productException.getMessage(),
-                API_DOCUMENTS_LINK,
+                productException.getApiDocsLink(),
                 PRODUCT_EXCEPTION,
-                HttpStatus.BAD_REQUEST);
+                HttpStatus.valueOf(productException.getStatusCode()));
 
         //Custom HttpResponse
         problemDetail.setProperties(Map.ofEntries(
@@ -82,7 +84,7 @@ public class GlobalExceptionHandler {
         ));
 
 
-        return new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(problemDetail, HttpStatus.valueOf(productException.getStatusCode()));
     }
 
     @ExceptionHandler(KycException.class)
@@ -102,6 +104,25 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(problemDetail, HttpStatus.UNPROCESSABLE_ENTITY);
     }
+
+//    @ExceptionHandler(MethodArgumentNotValidException.class)
+//    public ResponseEntity<ProblemDetail> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+//
+//        //Building passing generic response
+//        ProblemDetail problemDetail = buildGenericResponse(
+//                ex.getMessage(),
+//                API_DOCUMENTS_LINK,
+//                PRODUCT_EXCEPTION,
+//                HttpStatus.BAD_REQUEST);
+//
+//        //Custom HttpResponse
+//        problemDetail.setProperties(Map.ofEntries(
+//                Map.entry(HTTP_PRODUCT_RESPONSE, ex.getBody())
+//        ));
+//
+//
+//        return new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST);
+//    }
 
     private ProblemDetail buildGenericResponse(String errorMessage,
                                                String apiDocumentsLink,

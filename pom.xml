@@ -126,6 +126,31 @@
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 
+		<!--Health Actuator-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+
+		<!--prometheus-->
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-registry-prometheus</artifactId>
+		</dependency>
+
+		<!--To support unit test for Static Util-->
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-inline</artifactId>
+			<version>4.6.1</version> <!-- Or the latest version -->
+			<scope>test</scope>
+		</dependency>
+
+		<!--@Valid purpose-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
 
 	</dependencies>
 
@@ -235,6 +260,15 @@
 						<configuration>
 							<excludes>
 								<exclude>**/MainApplication*.class</exclude>
+								<exclude>com/virtual/threads/config/**</exclude>
+								<exclude>com/virtual/threads/adapter/**</exclude>
+								<exclude>com/virtual/threads/advice/**</exclude>
+								<exclude>com/virtual/threads/mapper/**</exclude>
+								<exclude>com/virtual/threads/model/**</exclude>
+								<exclude>com/virtual/threads/repository/**</exclude>
+								<exclude>com/virtual/threads/util/**</exclude>
+								<exclude>com/virtual/threads/entity/**</exclude>
+								<exclude>com/virtual/threads/constant/**</exclude>
 							</excludes>
 						</configuration>
 						<executions>
