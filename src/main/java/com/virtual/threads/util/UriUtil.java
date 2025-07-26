@@ -33,20 +33,4 @@ public class UriUtil {
                 .toUri();
     }
 
-//    public static boolean validateRequest(HttpProductRequest httpProductRequest) {
-//        return switch (httpProductRequest) {
-//            case HttpProductRequest request when request.getName().isEmpty() -> false;
-//            case HttpProductRequest request when null == request.getPrice() || request.getPrice() < 0 -> false;
-//            default -> true;
-//        };
-//    }
-//
-//    public static boolean validateRequest(HttpUserRequest httpUserRequest) {
-//        return switch (httpUserRequest) {
-//            case HttpUserRequest request when request.getUsername().isEmpty() -> false;
-//            case HttpUserRequest request when request.getPassword().isEmpty() -> false;
-//            default -> true;
-//        };
-//    }
-
 }

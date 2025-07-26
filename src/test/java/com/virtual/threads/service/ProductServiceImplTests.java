@@ -34,7 +34,7 @@ import static org.mockito.Mockito.when;
  */
 
 @ExtendWith(MockitoExtension.class)
-public class ProductServiceImplTest {
+public class ProductServiceImplTests {
 
     @Mock
     private UserRepository userRepository;
