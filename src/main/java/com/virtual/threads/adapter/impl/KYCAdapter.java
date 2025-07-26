@@ -51,10 +51,10 @@ public class KYCAdapter implements KYCClient {
         validateKYCRequest(bindingResult);
 
         //Calling External API
-        return getKYC(httpUserRequest);
+        return callingExternalKYC(httpUserRequest);
     }
 
-    private HttpKycResponse getKYC(HttpUserRequest httpUserRequest) {
+    private HttpKycResponse callingExternalKYC(HttpUserRequest httpUserRequest) {
         try {
             KYCResponse kycResponse =  restClient.post()
                     .uri(KYC)
